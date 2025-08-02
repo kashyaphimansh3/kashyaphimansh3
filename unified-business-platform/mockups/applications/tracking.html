@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Tracking - Unified Regulatory Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colors */
+            --primary-blue: #1E3A8A;
+            --secondary-blue: #3B82F6;
+            --light-blue: #EFF6FF;
+            --success-green: #059669;
+            --success-light: #ECFDF5;
+            --warning-orange: #D97706;
+            --warning-light: #FFFBEB;
+            --error-red: #DC2626;
+            --error-light: #FEF2F2;
+            --gray-900: #111827;
+            --gray-800: #1F2937;
+            --gray-700: #374151;
+            --gray-600: #4B5563;
+            --gray-500: #6B7280;
+            --gray-400: #9CA3AF;
+            --gray-300: #D1D5DB;
+            --gray-200: #E5E7EB;
+            --gray-100: #F3F4F6;
+            --gray-50: #F9FAFB;
+            
+            /* Typography */
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.5;
+        }
+
+        /* Header (simplified) */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .breadcrumb a {
+            color: var(--secondary-blue);
+            text-decoration: none;
+        }
+
+        .breadcrumb span {
+            color: var(--gray-400);
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--gray-600);
+        }
+
+        /* Application Header Card */
+        .app-header {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .app-info h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .app-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            color: var(--gray-600);
+            font-size: 14px;
+        }
+
+        .app-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-large {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .status-large.pending {
+            background: var(--warning-light);
+            color: var(--warning-orange);
+        }
+
+        .status-large.approved {
+            background: var(--success-light);
+            color: var(--success-green);
+        }
+
+        .status-large.rejected {
+            background: var(--error-light);
+            color: var(--error-red);
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1E40AF;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-blue);
+        }
+
+        /* Progress Tracker */
+        .progress-section {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 20px;
+        }
+
+        .progress-tracker {
+            position: relative;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .progress-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            width: 2px;
+            height: calc(100% + 8px);
+            background: var(--gray-200);
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .progress-step.completed::after {
+            background: var(--success-green);
+        }
+
+        .progress-step.active::after {
+            background: linear-gradient(to bottom, var(--success-green) 0%, var(--success-green) 50%, var(--gray-200) 50%, var(--gray-200) 100%);
+        }
+
+        .step-marker {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-step.completed .step-marker {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .progress-step.active .step-marker {
+            background: var(--secondary-blue);
+            color: white;
+        }
+
+        .progress-step.pending .step-marker {
+            background: var(--gray-200);
+            color: var(--gray-600);
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 8px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .step-timestamp {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .step-details {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--gray-50);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .step-details.success {
+            background: var(--success-light);
+            color: var(--success-green);
+        }
+
+        .step-details.warning {
+            background: var(--warning-light);
+            color: var(--warning-orange);
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Document List */
+        .document-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+        }
+
+        .doc-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .doc-info {
+            flex: 1;
+        }
+
+        .doc-name {
+            font-weight: 500;
+            color: var(--gray-900);
+            font-size: 14px;
+        }
+
+        .doc-status {
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        .doc-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .doc-actions button {
+            padding: 4px 8px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .doc-actions button:hover {
+            background: var(--gray-200);
+        }
+
+        /* Communication Timeline */
+        .communication-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .communication-item:last-child {
+            border-bottom: none;
+        }
+
+        .comm-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--secondary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .comm-content {
+            flex: 1;
+        }
+
+        .comm-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .comm-sender {
+            font-weight: 500;
+            color: var(--gray-900);
+            font-size: 14px;
+        }
+
+        .comm-time {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .comm-message {
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 16px;
+            }
+
+            .app-header {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-step {
+                margin-bottom: 24px;
+            }
+
+            .step-marker {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+
+            .progress-step::after {
+                left: 16px;
+            }
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert.warning {
+            background: var(--warning-light);
+            color: var(--warning-orange);
+            border: 1px solid #FDE68A;
+        }
+
+        .alert.info {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 1px solid #BFDBFE;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="breadcrumb">
+            <a href="#">Dashboard</a>
+            <span>›</span>
+            <a href="#">Applications</a>
+            <span>›</span>
+            <span>Trade License Application</span>
+        </nav>
+        
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <select style="padding: 8px; border: 1px solid var(--gray-300); border-radius: 6px;">
+                <option>English</option>
+                <option>हिंदी</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Application Tracking</h1>
+            <p class="page-subtitle">Monitor the progress of your regulatory applications</p>
+        </div>
+
+        <!-- Application Header -->
+        <div class="app-header">
+            <div class="app-info">
+                <h2>Trade License Application</h2>
+                <div class="app-meta">
+                    <span>📋 Application ID: TL2024001234</span>
+                    <span>📅 Submitted: March 15, 2024</span>
+                    <span>⏱️ Expected: April 5, 2024</span>
+                    <span>🏢 Department: Municipal Corporation</span>
+                </div>
+            </div>
+            
+            <div class="status-large pending">
+                Document Review
+            </div>
+            
+            <div class="quick-actions">
+                <button class="btn btn-primary">Upload Documents</button>
+                <button class="btn btn-secondary">Contact Officer</button>
+            </div>
+        </div>
+
+        <!-- Important Alert -->
+        <div class="alert warning">
+            <span>⚠️</span>
+            <div>
+                <strong>Action Required:</strong> Please upload the Fire Safety Certificate to proceed with your application.
+                <a href="#" style="color: var(--warning-orange); text-decoration: underline; margin-left: 4px;">Upload Now</a>
+            </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-section">
+            <h3 class="section-title">Application Progress</h3>
+            
+            <div class="progress-tracker">
+                <div class="progress-step completed">
+                    <div class="step-marker">✓</div>
+                    <div class="step-content">
+                        <div class="step-title">Application Submitted</div>
+                        <div class="step-description">Your application has been successfully submitted and assigned a reference number.</div>
+                        <div class="step-timestamp">March 15, 2024 at 2:30 PM</div>
+                        <div class="step-details success">
+                            Application fee of ₹2,850 paid successfully via UPI.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress-step completed">
+                    <div class="step-marker">✓</div>
+                    <div class="step-content">
+                        <div class="step-title">Initial Review</div>
+                        <div class="step-description">Basic application details verified by the department.</div>
+                        <div class="step-timestamp">March 16, 2024 at 10:15 AM</div>
+                        <div class="step-details success">
+                            All basic information verified. Assigned to Officer: Mr. Rajesh Kumar
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress-step active">
+                    <div class="step-marker">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Document Verification</div>
+                        <div class="step-description">Reviewing uploaded documents and checking compliance requirements.</div>
+                        <div class="step-timestamp">In Progress since March 17, 2024</div>
+                        <div class="step-details warning">
+                            Fire Safety Certificate is required but not uploaded. Please upload to continue processing.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress-step pending">
+                    <div class="step-marker">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Field Inspection</div>
+                        <div class="step-description">On-site verification of business premises and compliance with regulations.</div>
+                        <div class="step-timestamp">Scheduled after document verification</div>
+                    </div>
+                </div>
+                
+                <div class="progress-step pending">
+                    <div class="step-marker">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Final Approval</div>
+                        <div class="step-description">License approval and digital certificate generation.</div>
+                        <div class="step-timestamp">Pending</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Documents -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Documents Status</h3>
+                </div>
+                <div class="card-body">
+                    <div class="document-list">
+                        <div class="document-item">
+                            <div class="doc-icon">📄</div>
+                            <div class="doc-info">
+                                <div class="doc-name">Business Registration Certificate</div>
+                                <div class="doc-status">✅ Verified - March 16, 2024</div>
+                            </div>
+                            <div class="doc-actions">
+                                <button>View</button>
+                            </div>
+                        </div>
+                        
+                        <div class="document-item">
+                            <div class="doc-icon">🏠</div>
+                            <div class="doc-info">
+                                <div class="doc-name">Address Proof</div>
+                                <div class="doc-status">✅ Verified - March 16, 2024</div>
+                            </div>
+                            <div class="doc-actions">
+                                <button>View</button>
+                            </div>
+                        </div>
+                        
+                        <div class="document-item">
+                            <div class="doc-icon">🆔</div>
+                            <div class="doc-info">
+                                <div class="doc-name">Aadhaar Card</div>
+                                <div class="doc-status">✅ Verified - March 16, 2024</div>
+                            </div>
+                            <div class="doc-actions">
+                                <button>View</button>
+                            </div>
+                        </div>
+                        
+                        <div class="document-item" style="border-color: var(--warning-orange); background: var(--warning-light);">
+                            <div class="doc-icon">🔥</div>
+                            <div class="doc-info">
+                                <div class="doc-name">Fire Safety Certificate</div>
+                                <div class="doc-status">⚠️ Required - Not uploaded</div>
+                            </div>
+                            <div class="doc-actions">
+                                <button style="background: var(--warning-orange); color: white;">Upload</button>
+                            </div>
+                        </div>
+                        
+                        <div class="document-item">
+                            <div class="doc-icon">🌿</div>
+                            <div class="doc-info">
+                                <div class="doc-name">Environmental Clearance</div>
+                                <div class="doc-status">ℹ️ Optional - Not applicable</div>
+                            </div>
+                            <div class="doc-actions">
+                                <button>Info</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communication Timeline -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Communication History</h3>
+                </div>
+                <div class="card-body">
+                    <div class="communication-item">
+                        <div class="comm-avatar">RK</div>
+                        <div class="comm-content">
+                            <div class="comm-header">
+                                <span class="comm-sender">Rajesh Kumar (Officer)</span>
+                                <span class="comm-time">2 hours ago</span>
+                            </div>
+                            <div class="comm-message">
+                                Please upload the Fire Safety Certificate to proceed with the application review. You can obtain this from your local fire department.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="communication-item">
+                        <div class="comm-avatar">SY</div>
+                        <div class="comm-content">
+                            <div class="comm-header">
+                                <span class="comm-sender">System</span>
+                                <span class="comm-time">Yesterday at 10:15 AM</span>
+                            </div>
+                            <div class="comm-message">
+                                Your application has been assigned to Officer Rajesh Kumar for review. Reference ID: TL2024001234
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="communication-item">
+                        <div class="comm-avatar">SY</div>
+                        <div class="comm-content">
+                            <div class="comm-header">
+                                <span class="comm-sender">System</span>
+                                <span class="comm-time">March 15 at 2:30 PM</span>
+                            </div>
+                            <div class="comm-message">
+                                Application submitted successfully. Payment of ₹2,850 received. You will receive updates via email and SMS.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
